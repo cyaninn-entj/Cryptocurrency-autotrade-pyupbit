@@ -1,0 +1,8 @@
+---
+Resources:
+  MyInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: ap-northeast-2
+      ImageId: ami-0e38c97339cddf4bd #ap-northeast-2 ubuntu 22.04
+      InstanceType: t2.micro
