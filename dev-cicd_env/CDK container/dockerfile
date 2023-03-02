@@ -1,0 +1,32 @@
+# CDK container
+
+FROM ubuntu:22.04
+
+WORKDIR /home
+
+RUN apt-get update && apt-get install -y vim
+
+# install package managers and tools
+RUN apt install -y python3-pip
+RUN apt install python3.10-venv -y
+RUN apt install -y curl
+RUN apt-get install zip -y
+RUN apt install nodejs -y
+
+RUN apt install npm -y
+RUN npm cache clean -f
+RUN npm install -g n
+RUN n stable
+RUN n latest
+
+# install aws-cli
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+RUN unzip awscliv2.zip
+RUN ./aws/install
+
+# install and init aws-cdk
+RUN npm install -g aws-cdk
+RUN pip3 install aws-cdk-lib
+RUN mkdir /home/cdk-app
+WORKDIR /home/cdk-app
+RUN cdk init --language python
