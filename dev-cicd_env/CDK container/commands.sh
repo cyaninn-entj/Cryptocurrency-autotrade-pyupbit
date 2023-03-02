@@ -26,6 +26,3 @@ aws configure
 # Default region name [None]: ap-northeast-2
 # Default output format [None]: json
 
-
-# cdk-cli
-
