@@ -4,31 +4,43 @@ FROM ubuntu:22.04
 
 WORKDIR /home
 
-RUN apt-get update && apt-get install -y vim
+RUN apt update && apt-get update
+RUN apt-get install -y vim
+
+# install python3 and pip
+RUN apt install -y python3-pip
+
+RUN apt install python3.10-venv -y
+RUN python3 -m pip install --upgrade pip
+RUN python3 -m pip install --upgrade virtualenv
+#RUNpython3 -m ensurepip --upgrade
 
 # install package managers and tools
-RUN apt install -y python3-pip
-RUN apt install python3.10-venv -y
 RUN apt install -y curl
 RUN apt-get install zip -y
-RUN apt install nodejs -y
-
 RUN apt install npm -y
-RUN npm cache clean -f
-RUN npm install -g n
-RUN n stable
-RUN n latest
 
 # install aws-cli
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 RUN unzip awscliv2.zip
 RUN ./aws/install
 
+# update nodejs
+RUN npm cache clean -f
+RUN npm install -g n
+RUN n latest
+
 # install and init aws-cdk
 RUN npm install -g aws-cdk
 RUN pip3 install aws-cdk-lib
+RUN pip3 install --upgrade aws-cdk.core
 RUN mkdir /home/ethereum_autotrade
-RUN mkdir /home/lambda_bestk
-RUN mkdir /home/lambda_endpriceWithAI
 WORKDIR /home/ethereum_autotrade
-RUN cdk init --language python
+
+RUN cdk init app --language python
+# RUN python3 -m venv .venv
+RUN python3 -m pip install -r requirements.txt
+#RUN cdk bootstrap
+
+RUN mkdir /home/ethereum_autotrade/lambda_bestk
+RUN mkdir /home/ethereum_autotrade/lambda_endpriceWithAI

@@ -1,17 +1,19 @@
 from aws_cdk import (
-    core,
+    Stack,
     aws_ec2 as ec2,
     aws_dynamodb as dynamodb,
     aws_iam as iam,
     aws_lambda as _lambda,
+    aws_dynamodb as dynamodb,
     aws_events as events,
     aws_events_targets as targets,
     aws_sqs as sqs
 )
+from constructs import Construct
 
-class MyStack(core.Stack):
-    def __init__(self, scope: core.Construct, id: str, **kwargs) :
-        super().__init__(scope, id, **kwargs)
+class EthereumAutotradeStack(Stack):
+    def __init__(self, scope:Construct, construct_id: str, **kwargs) -> None :
+        super().__init__(scope, construct_id, **kwargs)
 
         # Retrieve the default VPC
         vpc = ec2.Vpc.from_lookup(self, 'Vpc', is_default=True)
@@ -22,18 +24,22 @@ class MyStack(core.Stack):
 
         # Define the key pair name, subnet ID, security group ID, and instance name
         key_pair_name = 'dev-all'
-        subnet_id = 'subnet-05cf568ac20acb748'
+        my_subnet_id = 'subnet-05cf568ac20acb748'
         security_group_id = 'sg-08c21160a4cdd32fd'
         instance_name = 'ehereum-trade-server'
+
+        ami_map={
+                instance_type: ami_id
+        }
 
         # Create the EC2 instance
         instance = ec2.Instance(
             self, 'EC2Instance',
             vpc=vpc,
             instance_type=ec2.InstanceType(instance_type),
-            machine_image=ec2.MachineImage.generic_linux(ami_id),
+            machine_image=ec2.MachineImage.generic_linux(ami_map),
             key_name=key_pair_name,
-            vpc_subnets=ec2.SubnetSelection(subnet_id=subnet_id),
+            vpc_subnets=ec2.SubnetSelection(subnet_id=my_subnet_id),
             security_group=ec2.SecurityGroup.from_security_group_id(self, 'SecurityGroup', security_group_id),
             instance_name=instance_name
         )
@@ -67,8 +73,17 @@ class MyStack(core.Stack):
         # Add an item to the table (test)
         table.add_item(
             item={
-                'service': 'test',
+                'service': 'test-k',
                 'K-value': 230308,
+                'EndPrice': 1
+            }
+        )
+
+        # Add an item to the table (test)
+        table.add_item(
+            item={
+                'service': 'test-ai',
+                'K-value': 230315,
                 'EndPrice': 1
             }
         )
