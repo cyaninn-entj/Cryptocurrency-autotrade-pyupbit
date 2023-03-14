@@ -27,6 +27,8 @@ RUN ./aws/install
 # install and init aws-cdk
 RUN npm install -g aws-cdk
 RUN pip3 install aws-cdk-lib
-RUN mkdir /home/cdk-app
-WORKDIR /home/cdk-app
+RUN mkdir /home/ethereum_autotrade
+RUN mkdir /home/lambda_bestk
+RUN mkdir /home/lambda_endpriceWithAI
+WORKDIR /home/ethereum_autotrade
 RUN cdk init --language python
